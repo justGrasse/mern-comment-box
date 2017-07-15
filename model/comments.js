@@ -1,20 +1,15 @@
-import React, { Component } from 'react';
-import style from './style';
-import marked from 'marked';
+//mode/comments.js
+'use strict';
+//import dependency
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 
-class Comment extends Component {
-  rawMarkup() {
-    let rawMarkup = marked(this.props.children.toString());
-    return { __html: rawMarkup };
-  }
+//create new instance of the mongoose.schema. the schema takes an object that shows
+//the shape of your database entries.
+var CommentsSchema = new Schema({
+  author: String,
+  text: String
+});
 
-  render() {
-    return (
-      <div style={ style.comment }>
-        <h3>{this.props.author}</h3>
-        <span dangerouslySetInnerHTML={ this.rawMarkup() } />
-      </div>
-    );
-  }
-}
-export default Comment;
+//export our module to use in server.js
+module.exports = mongoose.model('Comment', CommentsSchema);

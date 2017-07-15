@@ -3,11 +3,15 @@
 var express = require('express');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
+var Comment = require('./model/comments');
 
 var app = express();
 var router = express.Router();
 
 var port = process.env.API_PORT || 3001;
+
+//db config
+mongoose.connect(‘mongodb://mern-comment-box:mern-comment-box@ds161162.mlab.com:61162/mern-comment-box’);
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
