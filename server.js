@@ -11,7 +11,10 @@ var router = express.Router();
 var port = process.env.API_PORT || 3001;
 
 //db config
-mongoose.connect(‘mongodb://mern-comment-box:mern-comment-box@ds161162.mlab.com:61162/mern-comment-box’);
+mongoose.Promise = require('bluebird');
+mongoose.connect('mongodb://mern-comment-box:mern-comment-box@ds161162.mlab.com:61162/mern-comment-box', {
+  useMongoClient: true,
+});
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -28,6 +31,25 @@ app.use(function(req, res, next) {
 router.get('/', function(req, res) {
   res.json({ message: 'API Initialized!'});
 });
+
+router.route('/comments')
+ .get(function(req, res) {
+   Comment.find(function(err, comments) {
+     if (err) res.send(err);
+     res.json(comments)
+   });
+ })
+ .post(function(req, res) {
+   var comment = new Comment();
+   comment.author = req.body.author;
+   comment.text = req.body.text;
+   comment.save(function(err) {
+    if (err) res.send(err);
+    res.json({
+      message: 'Comment successfully added!',
+    });
+  });
+ });
 
 app.use('/api', router);
 
